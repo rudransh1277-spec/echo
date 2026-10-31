@@ -1,0 +1,155 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * ECHO design system — Vercel/Geist style: black-and-white precision.
+ * 1px borders, radius 8px, no gradients, no shadows.
+ * Accent colors are small icon/dot colors only.
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --font-sans: "Geist", "Noto Sans Devanagari", Inter, system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-alert: var(--alert);
+  --color-alert-foreground: var(--alert-foreground);
+  --color-fire: var(--fire);
+  --color-police: var(--police);
+  --color-woman: var(--woman);
+  --color-ambulance: var(--ambulance);
+  --color-child: var(--child);
+  --color-medication: var(--medication);
+}
+
+:root {
+  --radius: 0.5rem;
+  --background: #ffffff;
+  --foreground: #171717;
+  --card: #fafafa;
+  --card-foreground: #171717;
+  --popover: #ffffff;
+  --popover-foreground: #171717;
+  --primary: #171717;
+  --primary-foreground: #ffffff;
+  --secondary: #fafafa;
+  --secondary-foreground: #171717;
+  --muted: #fafafa;
+  --muted-foreground: #666666;
+  --accent: #fafafa;
+  --accent-foreground: #171717;
+  --destructive: #e5484d;
+  --destructive-foreground: #ffffff;
+  --border: #eaeaea;
+  --input: #eaeaea;
+  --ring: #171717;
+  --alert: #e5484d;
+  --alert-foreground: #ffffff;
+  --fire: #ff5b4f;
+  --police: #0a72ef;
+  --woman: #de1d8d;
+  --ambulance: #e5484d;
+  --child: #f5a623;
+  --medication: #0a72ef;
+}
+
+.dark {
+  --background: #000000;
+  --foreground: #ededed;
+  --card: #0a0a0a;
+  --card-foreground: #ededed;
+  --popover: #0a0a0a;
+  --popover-foreground: #ededed;
+  --primary: #ededed;
+  --primary-foreground: #000000;
+  --secondary: #0a0a0a;
+  --secondary-foreground: #ededed;
+  --muted: #0a0a0a;
+  --muted-foreground: #a1a1a1;
+  --accent: #0a0a0a;
+  --accent-foreground: #ededed;
+  --destructive: #e5484d;
+  --destructive-foreground: #ffffff;
+  --border: #262626;
+  --input: #262626;
+  --ring: #ededed;
+  --alert: #e5484d;
+  --alert-foreground: #ffffff;
+  --fire: #ff5b4f;
+  --police: #0a72ef;
+  --woman: #de1d8d;
+  --ambulance: #e5484d;
+  --child: #f5a623;
+  --medication: #0a72ef;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-weight: 600;
+    letter-spacing: -0.03em;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-foreground);
+    outline-offset: 2px;
+  }
+
+  /* Safe areas for installed standalone mode (viewport-fit=cover) */
+  .echo-shell {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+    padding-top: max(0.75rem, env(safe-area-inset-top));
+    padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
