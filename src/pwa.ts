@@ -9,9 +9,7 @@ function isPreviewHost(hostname: string): boolean {
   const previewLabel = /^(?:id-preview|preview)(?:-[a-z0-9]+)?--.+$/.test(first);
   if (
     previewLabel &&
-    (h.endsWith(".lovable.app") ||
-      h.endsWith(".gpt-eng.com") ||
-      h.endsWith(".gptengineer.run"))
+    (h.endsWith(".lovable.app") || h.endsWith(".gpt-eng.com") || h.endsWith(".gptengineer.run"))
   ) {
     return true;
   }

@@ -3,13 +3,7 @@
 
 export type Lang = "en" | "hi";
 export type AlertChannel = "whatsapp" | "sms";
-export type Category =
-  | "ambulance"
-  | "fire"
-  | "police"
-  | "woman"
-  | "child"
-  | "medication";
+export type Category = "ambulance" | "fire" | "police" | "woman" | "child" | "medication";
 export type PrefComm = "text" | "sign" | "hearNotSpeak";
 export type Coords = { lat: number; lng: number };
 export type FamilyContact = { name: string; number: string };
@@ -19,10 +13,7 @@ export type EchoProfile = {
   prefComm: PrefComm;
   landmark: string;
   family: FamilyContact[];
-  authority: Record<
-    "ambulance" | "fire" | "police" | "woman" | "child",
-    string
-  >;
+  authority: Record<"ambulance" | "fire" | "police" | "woman" | "child", string>;
   callNumbers: CallNumbers;
   setupDone: boolean;
 };
@@ -35,10 +26,7 @@ export const DEFAULT_AUTHORITY = {
   child: "919999900005",
 };
 
-export type CallNumbers = Record<
-  "ambulance" | "fire" | "police" | "woman" | "child",
-  string
->;
+export type CallNumbers = Record<"ambulance" | "fire" | "police" | "woman" | "child", string>;
 
 export const DEFAULT_CALL_NUMBERS: CallNumbers = {
   ambulance: "102",
@@ -164,8 +152,7 @@ export function waUrl(number: string, message: string): string {
 
 const en = {
   appName: "ECHO",
-  banner:
-    "Messages go to the numbers set in Settings. Call buttons dial real helplines.",
+  banner: "Messages go to the numbers set in Settings. Call buttons dial real helplines.",
   whatsapp: "WhatsApp",
   sms: "SMS",
   call: "Call",
@@ -200,8 +187,7 @@ const en = {
   backHome: "Back home",
   settings: "Settings",
   setupTitle: "Set up ECHO",
-  setupSub:
-    "One-time setup so one tap is all it takes in an emergency.",
+  setupSub: "One-time setup so one tap is all it takes in an emergency.",
   yourName: "Your name",
   namePlaceholder: "e.g. Azhar",
   languageLabel: "Language",
@@ -228,8 +214,7 @@ const en = {
   errName: "Please enter your name.",
   errLandmark: "Please enter a landmark or address.",
   errContactName: "Enter a name for this contact, or remove the row.",
-  errNumber:
-    "Enter a valid WhatsApp number (at least 10 digits).",
+  errNumber: "Enter a valid WhatsApp number (at least 10 digits).",
   callNumbersLabel: "Call numbers",
   callNumberHint: "Change to a test number while demoing",
   messageAria: "Message {category}",
@@ -243,8 +228,7 @@ export type Dict = typeof en;
 
 const hi: Record<keyof typeof en, string> = {
   appName: "ECHO",
-  banner:
-    "संदेश सेटिंग्स में दिए नंबरों पर जाते हैं। कॉल बटन असली हेल्पलाइन को डायल करते हैं।",
+  banner: "संदेश सेटिंग्स में दिए नंबरों पर जाते हैं। कॉल बटन असली हेल्पलाइन को डायल करते हैं।",
   whatsapp: "व्हाट्सऐप",
   sms: "एसएमएस",
   call: "कॉल",
@@ -424,12 +408,122 @@ export function normalizeDetails(raw: string): string {
 }
 
 const SPEECH_KEYWORDS: Record<Category, string[]> = {
-  fire: ["fire", "smoke", "burning", "blaze", "gas leak", "short circuit", "आग", "धुआं", "जल रहा", "aag", "dhuan"],
-  ambulance: ["fever", "pain", "chest", "bleeding", "blood", "injury", "injured", "accident", "unconscious", "faint", "breathing", "seizure", "heart attack", "stroke", "vomiting", "panic", "anxiety", "dizzy", "fracture", "बुखार", "दर्द", "खून", "चोट", "हादसा", "बेहोश", "सांस", "दौरा", "घबराहट", "चक्कर", "उल्टी", "bukhar", "dard", "khoon", "chot", "behosh", "ghabrahat"],
-  police: ["robbery", "thief", "theft", "attack", "threat", "kidnap", "fight", "gun", "knife", "followed", "चोर", "चोरी", "हमला", "धमकी", "अपहरण", "लड़ाई", "डकैती", "चाकू", "पीछा", "chori", "hamla", "dhamki"],
-  woman: ["woman", "harassment", "eve teasing", "molest", "domestic violence", "stalking", "महिला", "औरत", "छेड़छाड़", "घरेलू हिंसा", "उत्पीड़न", "chhedchhad"],
-  child: ["child", "kid", "baby", "missing", "lost", "बच्चा", "बच्ची", "गुमशुदा", "लापता", "bachcha", "bachchi"],
-  medication: ["medicine", "medication", "tablet", "pills", "insulin", "inhaler", "दवा", "दवाई", "इंसुलिन", "इन्हेलर", "dawa", "dawai"],
+  fire: [
+    "fire",
+    "smoke",
+    "burning",
+    "blaze",
+    "gas leak",
+    "short circuit",
+    "आग",
+    "धुआं",
+    "जल रहा",
+    "aag",
+    "dhuan",
+  ],
+  ambulance: [
+    "fever",
+    "pain",
+    "chest",
+    "bleeding",
+    "blood",
+    "injury",
+    "injured",
+    "accident",
+    "unconscious",
+    "faint",
+    "breathing",
+    "seizure",
+    "heart attack",
+    "stroke",
+    "vomiting",
+    "panic",
+    "anxiety",
+    "dizzy",
+    "fracture",
+    "बुखार",
+    "दर्द",
+    "खून",
+    "चोट",
+    "हादसा",
+    "बेहोश",
+    "सांस",
+    "दौरा",
+    "घबराहट",
+    "चक्कर",
+    "उल्टी",
+    "bukhar",
+    "dard",
+    "khoon",
+    "chot",
+    "behosh",
+    "ghabrahat",
+  ],
+  police: [
+    "robbery",
+    "thief",
+    "theft",
+    "attack",
+    "threat",
+    "kidnap",
+    "fight",
+    "gun",
+    "knife",
+    "followed",
+    "चोर",
+    "चोरी",
+    "हमला",
+    "धमकी",
+    "अपहरण",
+    "लड़ाई",
+    "डकैती",
+    "चाकू",
+    "पीछा",
+    "chori",
+    "hamla",
+    "dhamki",
+  ],
+  woman: [
+    "woman",
+    "harassment",
+    "eve teasing",
+    "molest",
+    "domestic violence",
+    "stalking",
+    "महिला",
+    "औरत",
+    "छेड़छाड़",
+    "घरेलू हिंसा",
+    "उत्पीड़न",
+    "chhedchhad",
+  ],
+  child: [
+    "child",
+    "kid",
+    "baby",
+    "missing",
+    "lost",
+    "बच्चा",
+    "बच्ची",
+    "गुमशुदा",
+    "लापता",
+    "bachcha",
+    "bachchi",
+  ],
+  medication: [
+    "medicine",
+    "medication",
+    "tablet",
+    "pills",
+    "insulin",
+    "inhaler",
+    "दवा",
+    "दवाई",
+    "इंसुलिन",
+    "इन्हेलर",
+    "dawa",
+    "dawai",
+  ],
 };
 
 export function interpretSpeech(text: string): Category | null {
@@ -438,9 +532,7 @@ export function interpretSpeech(text: string): Category | null {
   let winner: Category | null = null;
   let highestHits = 0;
   for (const category of priority) {
-    const hits = SPEECH_KEYWORDS[category].filter((keyword) =>
-      normalized.includes(keyword),
-    ).length;
+    const hits = SPEECH_KEYWORDS[category].filter((keyword) => normalized.includes(keyword)).length;
     if (hits > highestHits) {
       winner = category;
       highestHits = hits;
@@ -484,16 +576,12 @@ export function buildMessage({
 
   const lines: string[] = [
     `🚨 ${lang === "en" ? "EMERGENCY" : "आपातकाल"}: ${CATEGORY_HEADINGS[category][lang]}`,
-    cleanDetails
-      ? DETAIL_LINES[category][lang](cleanDetails)
-      : NEED_LINES[category][lang],
+    cleanDetails ? DETAIL_LINES[category][lang](cleanDetails) : NEED_LINES[category][lang],
     `${L.person}: ${profile.name}`,
     `${L.location}: ${profile.landmark}`,
   ];
   if (coords) {
-    lines.push(
-      `${L.currentLocation}: https://maps.google.com/?q=${coords.lat},${coords.lng}`,
-    );
+    lines.push(`${L.currentLocation}: https://maps.google.com/?q=${coords.lat},${coords.lng}`);
   }
   const family = profile.family[0];
   if (family) {
@@ -539,11 +627,7 @@ export function writePendingFlow(flow: PendingFlow | null) {
 /**
  * Opens the first authority step in the selected message channel.
  */
-export function dispatchAlert(
-  steps: AlertStep[],
-  message: string,
-  channel: AlertChannel,
-) {
+export function dispatchAlert(steps: AlertStep[], message: string, channel: AlertChannel) {
   const first = steps[0];
   if (!first) return;
   if (channel === "whatsapp") {
@@ -551,7 +635,8 @@ export function dispatchAlert(
     return;
   }
   const digits = first.number.replace(/\D/g, "");
-  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) ||
+  const isIOS =
+    /iphone|ipad|ipod/i.test(navigator.userAgent) ||
     (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
   const separator = isIOS ? "&" : "?";
   window.open(`sms:+${digits}${separator}body=${encodeURIComponent(message)}`, "_blank");

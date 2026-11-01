@@ -62,12 +62,9 @@ import {
   type PrefComm,
 } from "@/lib/echo";
 import { ls } from "@/lib/echo";
-import {
-  LANG_KEY,
-  COORDS_KEY,
-  THEME_KEY,
-} from "@/lib/echo";
+import { LANG_KEY, COORDS_KEY, THEME_KEY } from "@/lib/echo";
 import { registerEchoServiceWorker } from "@/pwa";
+import { useSpeechInput } from "@/hooks/use-speech-input";
 import { cn } from "@/lib/utils";
 
 type LocStatus = "locating" | "ready" | "denied";
@@ -86,9 +83,7 @@ const TILES: {
   { category: "medication", icon: Pill, colorClass: "text-medication" },
 ];
 
-function fetchLocation(
-  timeoutMs: number,
-): Promise<{ coords: Coords | null; denied: boolean }> {
+function fetchLocation(timeoutMs: number): Promise<{ coords: Coords | null; denied: boolean }> {
   return new Promise((resolve) => {
     if (typeof navigator === "undefined" || !("geolocation" in navigator)) {
       resolve({ coords: null, denied: false });
@@ -135,9 +130,14 @@ export default function EchoApp() {
     registerEchoServiceWorker();
 
     const storedTheme = ls.get(THEME_KEY);
-    const systemDark =
-      window.matchMedia?.("(prefers-color-scheme: dark)").matches ?? false;
-    setTheme(storedTheme === "dark" || storedTheme === "light" ? storedTheme : systemDark ? "dark" : "light");
+    const systemDark = window.matchMedia?.("(prefers-color-scheme: dark)").matches ?? false;
+    setTheme(
+      storedTheme === "dark" || storedTheme === "light"
+        ? storedTheme
+        : systemDark
+          ? "dark"
+          : "light",
+    );
 
     const storedLang = ls.get(LANG_KEY);
     if (storedLang === "hi" || storedLang === "en") setLang(storedLang);
@@ -233,8 +233,7 @@ export default function EchoApp() {
     [],
   );
   const isStandalone =
-    typeof window !== "undefined" &&
-    window.matchMedia?.("(display-mode: standalone)").matches;
+    typeof window !== "undefined" && window.matchMedia?.("(display-mode: standalone)").matches;
 
   const enableLocation = useCallback(async () => {
     setLocStatus("locating");
@@ -275,14 +274,17 @@ export default function EchoApp() {
     if (!speech.supported) return;
     speech.stopListening();
     setVoiceMode("global");
-    speech.startListening((text) => {
-      setVoiceMode(null);
-      setConfirmCat(interpretSpeech(text));
-      setChannel("whatsapp");
-      setDetails(normalizeDetails(text));
-      setConfirmOpen(true);
-      vibrate(50);
-    }, () => {});
+    speech.startListening(
+      (text) => {
+        setVoiceMode(null);
+        setConfirmCat(interpretSpeech(text));
+        setChannel("whatsapp");
+        setDetails(normalizeDetails(text));
+        setConfirmOpen(true);
+        vibrate(50);
+      },
+      () => {},
+    );
   };
 
   const beginDetailsVoice = () => {
@@ -330,9 +332,7 @@ export default function EchoApp() {
       });
 
       const authorityNumber =
-        category === "medication"
-          ? profile.authority.ambulance
-          : profile.authority[category];
+        category === "medication" ? profile.authority.ambulance : profile.authority[category];
 
       const steps: AlertStep[] = [
         {
@@ -392,9 +392,19 @@ export default function EchoApp() {
 
   const showSetup = !profile.setupDone;
   const locationChip = {
-    locating: { icon: Loader2, label: t.locLocating, className: "text-muted-foreground", spin: true },
+    locating: {
+      icon: Loader2,
+      label: t.locLocating,
+      className: "text-muted-foreground",
+      spin: true,
+    },
     ready: { icon: MapPin, label: t.locReady, className: "text-foreground", spin: false },
-    denied: { icon: MapPinOff, label: t.locDenied, className: "text-muted-foreground", spin: false },
+    denied: {
+      icon: MapPinOff,
+      label: t.locDenied,
+      className: "text-muted-foreground",
+      spin: false,
+    },
   }[locStatus];
   const ChipIcon = locationChip.icon;
 
@@ -407,9 +417,16 @@ export default function EchoApp() {
           aria-live="polite"
           className="fixed inset-0 z-[60] flex flex-col items-center justify-center gap-4 bg-background/95 px-6 text-center"
         >
-          <Mic aria-hidden className={cn("h-10 w-10 text-alert", speech.listening && "animate-pulse")} />
+          <Mic
+            aria-hidden
+            className={cn("h-10 w-10 text-alert", speech.listening && "animate-pulse")}
+          />
           <p className="text-lg font-semibold">
-            {speech.listening ? t.listening : t.voiceTryAgain}
+            {speech.listening
+              ? t.listening
+              : speech.error
+                ? `${t.voiceTryAgain} (${speech.error})`
+                : t.voiceTryAgain}
           </p>
           {speech.transcript && (
             <p className="max-w-sm text-sm text-muted-foreground">{speech.transcript}</p>
@@ -442,9 +459,7 @@ export default function EchoApp() {
           <p className="text-sm text-muted-foreground">
             {t.stepAlertSent.replace("{n}", String(flow.completed))}
           </p>
-          <h1 className="max-w-xs text-2xl font-semibold tracking-[-0.03em]">
-            {t.stepNowFamily}
-          </h1>
+          <h1 className="max-w-xs text-2xl font-semibold tracking-[-0.03em]">{t.stepNowFamily}</h1>
           <Button
             size="lg"
             onClick={() => openNextStep(flow)}
@@ -536,7 +551,11 @@ export default function EchoApp() {
             <span className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2.5 py-1 text-xs text-muted-foreground">
               <ChipIcon
                 aria-hidden
-                className={cn("h-3.5 w-3.5", locationChip.className, locationChip.spin && "animate-spin")}
+                className={cn(
+                  "h-3.5 w-3.5",
+                  locationChip.className,
+                  locationChip.spin && "animate-spin",
+                )}
               />
               {locationChip.label}
             </span>
@@ -567,9 +586,7 @@ export default function EchoApp() {
                 const Icon = tile.icon;
                 const label = CATEGORY_NAMES[tile.category][lang];
                 const callNumber =
-                  profile.callNumbers[
-                    tile.category === "medication" ? "ambulance" : tile.category
-                  ];
+                  profile.callNumbers[tile.category === "medication" ? "ambulance" : tile.category];
                 return (
                   <div
                     key={tile.category}
@@ -578,7 +595,9 @@ export default function EchoApp() {
                     <Icon aria-hidden className={cn("h-5 w-5", tile.colorClass)} />
                     <span className="mt-1.5">
                       <span className="block text-sm font-semibold leading-tight">{label}</span>
-                      <span className="mt-0.5 block text-xs text-muted-foreground">{callNumber}</span>
+                      <span className="mt-0.5 block text-xs text-muted-foreground">
+                        {callNumber}
+                      </span>
                     </span>
                     <div className="mt-3 grid grid-cols-2 gap-2">
                       <button
@@ -650,9 +669,7 @@ export default function EchoApp() {
               </p>
             )}
 
-            <p className="mt-auto pt-6 text-center text-xs text-muted-foreground">
-              {t.madeWith}
-            </p>
+            <p className="mt-auto pt-6 text-center text-xs text-muted-foreground">{t.madeWith}</p>
           </main>
 
           {/* Confirm sheet */}
@@ -711,13 +728,7 @@ export default function EchoApp() {
   );
 }
 
-function LangToggle({
-  lang,
-  onLangChange,
-}: {
-  lang: Lang;
-  onLangChange: (l: Lang) => void;
-}) {
+function LangToggle({ lang, onLangChange }: { lang: Lang; onLangChange: (l: Lang) => void }) {
   return (
     <div
       role="group"
@@ -742,128 +753,6 @@ function LangToggle({
       ))}
     </div>
   );
-}
-
-type SpeechResultLike = { isFinal: boolean; 0: { transcript: string } };
-type SpeechEventLike = { resultIndex: number; results: ArrayLike<SpeechResultLike> };
-type SpeechRecognitionLike = {
-  lang: string;
-  continuous: boolean;
-  interimResults: boolean;
-  onstart: (() => void) | null;
-  onresult: ((event: SpeechEventLike) => void) | null;
-  onend: (() => void) | null;
-  onerror: (() => void) | null;
-  start: () => void;
-  stop: () => void;
-};
-type SpeechRecognitionConstructor = new () => SpeechRecognitionLike;
-
-function useSpeechInput(lang: Lang) {
-  const [listening, setListening] = useState(false);
-  const [transcript, setTranscript] = useState("");
-  const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
-  const silenceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const finishRef = useRef<(() => void) | null>(null);
-  const speechWindow = typeof window === "undefined"
-    ? null
-    : (window as Window & {
-        SpeechRecognition?: SpeechRecognitionConstructor;
-        webkitSpeechRecognition?: SpeechRecognitionConstructor;
-      });
-  const Recognition = speechWindow?.SpeechRecognition ?? speechWindow?.webkitSpeechRecognition;
-  const supported = Boolean(Recognition);
-
-  const stopListening = () => {
-    try {
-      recognitionRef.current?.stop();
-    } catch {
-      finishRef.current?.();
-    }
-    finishRef.current?.();
-  };
-
-  const startListening = (onFinal: (text: string) => void, onStop: () => void) => {
-    stopListening();
-    if (!Recognition) {
-      onStop();
-      return;
-    }
-
-    const recognition = new Recognition();
-    let finished = false;
-    const finish = () => {
-      if (finished) return;
-      finished = true;
-      if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
-      silenceTimerRef.current = null;
-      setListening(false);
-      recognitionRef.current = null;
-      finishRef.current = null;
-      onStop();
-    };
-    const resetSilenceTimer = () => {
-      if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
-      silenceTimerRef.current = setTimeout(() => {
-        try {
-          recognition.stop();
-        } catch {
-          finish();
-        }
-      }, 6000);
-    };
-
-    recognition.lang = lang === "en" ? "en-IN" : "hi-IN";
-    recognition.continuous = false;
-    recognition.interimResults = true;
-    recognition.onstart = resetSilenceTimer;
-    recognition.onresult = (event) => {
-      let interim = "";
-      let finalText = "";
-      for (let index = 0; index < event.results.length; index += 1) {
-        const result = event.results[index];
-        if (result.isFinal) finalText += result[0].transcript;
-        else interim += result[0].transcript;
-      }
-      setTranscript((finalText || interim).trim());
-      resetSilenceTimer();
-      if (finalText.trim()) {
-        onFinal(finalText.trim());
-        finish();
-        try {
-          recognition.stop();
-        } catch {
-          /* recognition may already have stopped */
-        }
-      }
-    };
-    recognition.onend = finish;
-    recognition.onerror = finish;
-    recognitionRef.current = recognition;
-    finishRef.current = finish;
-    setTranscript("");
-    setListening(true);
-    resetSilenceTimer();
-    try {
-      recognition.start();
-    } catch {
-      finish();
-    }
-  };
-
-  useEffect(
-    () => () => {
-      if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
-      try {
-        recognitionRef.current?.stop();
-      } catch {
-        /* ignore cleanup errors */
-      }
-    },
-    [],
-  );
-
-  return { listening, transcript, supported, startListening, stopListening };
 }
 
 function ConfirmSheet({
@@ -899,11 +788,7 @@ function ConfirmSheet({
   voiceTranscript: string;
   onDetailsMic: () => void;
   onCancel: () => void;
-  onSend: (
-    category: Category,
-    channel: AlertChannel,
-    details: string,
-  ) => void;
+  onSend: (category: Category, channel: AlertChannel, details: string) => void;
 }) {
   const t = dict(lang);
   const message = useMemo(() => {
@@ -974,7 +859,10 @@ function ConfirmSheet({
                 onClick={onDetailsMic}
                 className="h-10 w-10 shrink-0"
               >
-                <Mic aria-hidden className={cn("h-4 w-4", voiceListening && "animate-pulse text-alert")} />
+                <Mic
+                  aria-hidden
+                  className={cn("h-4 w-4", voiceListening && "animate-pulse text-alert")}
+                />
               </Button>
             </div>
             {voiceListening && voiceTranscript && (
@@ -988,9 +876,7 @@ function ConfirmSheet({
           </div>
 
           <div>
-            <p className="mb-2 text-xs font-medium text-muted-foreground">
-              {t.categoryLabel}
-            </p>
+            <p className="mb-2 text-xs font-medium text-muted-foreground">{t.categoryLabel}</p>
             <div className="flex flex-nowrap gap-1.5 overflow-x-auto pb-1">
               {TILES.map(({ category: chipCategory }) => (
                 <button
@@ -1165,9 +1051,7 @@ function SetupForm({
   ];
 
   const updateRow = (index: number, patch: Partial<FamilyContact>) => {
-    setFamilyRows((rows) =>
-      rows.map((row, i) => (i === index ? { ...row, ...patch } : row)),
-    );
+    setFamilyRows((rows) => rows.map((row, i) => (i === index ? { ...row, ...patch } : row)));
   };
 
   const handleSave = () => {
@@ -1227,9 +1111,7 @@ function SetupForm({
   };
 
   const fieldError = (key: string) =>
-    errors[key] ? (
-      <p className="mt-1 text-xs text-destructive">{errors[key]}</p>
-    ) : null;
+    errors[key] ? <p className="mt-1 text-xs text-destructive">{errors[key]}</p> : null;
 
   return (
     <form
@@ -1314,9 +1196,7 @@ function SetupForm({
                 {familyRows.length > 1 && (
                   <button
                     type="button"
-                    onClick={() =>
-                      setFamilyRows((rows) => rows.filter((_, ri) => ri !== i))
-                    }
+                    onClick={() => setFamilyRows((rows) => rows.filter((_, ri) => ri !== i))}
                     aria-label={t.removeContact}
                     className="text-muted-foreground hover:text-foreground"
                   >
@@ -1371,9 +1251,7 @@ function SetupForm({
               <Input
                 id={`authority-${key}`}
                 value={authority[key]}
-                onChange={(e) =>
-                  setAuthority((a) => ({ ...a, [key]: e.target.value }))
-                }
+                onChange={(e) => setAuthority((a) => ({ ...a, [key]: e.target.value }))}
                 type="tel"
                 inputMode="tel"
                 className="mt-1 bg-background"

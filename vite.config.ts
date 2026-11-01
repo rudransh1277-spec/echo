@@ -59,9 +59,7 @@ export default defineConfig({
         },
         workbox: {
           navigateFallback: "/",
-          globPatterns: [
-            "**/*.{js,mjs,css,html,png,svg,ico,woff,woff2,json,webmanifest}",
-          ],
+          globPatterns: ["**/*.{js,mjs,css,html,png,svg,ico,woff,woff2,json,webmanifest}"],
           navigateFallbackDenylist: [/^\/api\//],
         },
         devOptions: {

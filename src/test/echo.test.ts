@@ -55,18 +55,12 @@ describe("buildMessage (EN)", () => {
 
   it("uses the fixed EN template", () => {
     expect(message).toContain("🚨 EMERGENCY: AMBULANCE");
-    expect(message).toContain(
-      "Urgent medical help needed. Please send an ambulance.",
-    );
+    expect(message).toContain("Urgent medical help needed. Please send an ambulance.");
     expect(message).toContain("Person: Azhar");
-    expect(message).toContain("Location: Block C, GEHU");
-    expect(message).toContain(
-      "Map: https://maps.google.com/?q=30.3165,78.0322",
-    );
+    expect(message).toContain("Home location: Block C, GEHU");
+    expect(message).toContain("Current location: https://maps.google.com/?q=30.3165,78.0322");
     expect(message).toContain("Emergency contact: Abba (919876543210)");
-    expect(message).toContain(
-      "Preferred communication: I can hear, cannot speak",
-    );
+    expect(message).toContain("Preferred communication: I can hear, cannot speak");
     expect(message).toContain("Sent via ECHO at ");
   });
 
@@ -78,12 +72,10 @@ describe("buildMessage (EN)", () => {
       coords: null,
     });
     expect(medication).toContain("🚨 EMERGENCY: MEDICATION");
-    expect(medication).toContain(
-      "I need medication urgently. Please help me get it.",
-    );
+    expect(medication).toContain("I need medication urgently. Please help me get it.");
   });
 
-  it("omits the Map line without coordinates and notes GPS unavailable", () => {
+  it("omits the Current location line without coordinates", () => {
     const noCoords = buildMessage({
       profile,
       category: "police",
@@ -91,8 +83,7 @@ describe("buildMessage (EN)", () => {
       coords: null,
       gpsUnavailable: true,
     });
-    expect(noCoords).not.toContain("Map:");
-    expect(noCoords).toContain("GPS unavailable");
+    expect(noCoords).not.toContain("Current location:");
   });
 });
 
@@ -108,8 +99,8 @@ describe("buildMessage (HI)", () => {
     expect(message).toContain("🚨 आपातकाल: महिला हेल्पलाइन");
     expect(message).toContain("एक महिला खतरे में है और उसे मदद चाहिए।");
     expect(message).toContain("व्यक्ति: Azhar");
-    expect(message).toContain("स्थान: Block C, GEHU");
-    expect(message).toContain("नक्शा: https://maps.google.com/?q=30.3165,78.0322");
+    expect(message).toContain("घर का स्थान: Block C, GEHU");
+    expect(message).toContain("वर्तमान स्थान: https://maps.google.com/?q=30.3165,78.0322");
     expect(message).toContain("आपातकालीन संपर्क: Abba (919876543210)");
     expect(message).toContain("पसंदीदा संचार माध्यम: मैं सुन सकता हूँ, बोल नहीं सकता");
   });
