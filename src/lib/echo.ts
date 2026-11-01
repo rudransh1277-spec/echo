@@ -1,5 +1,5 @@
 // ECHO core: types, i18n dictionary, storage, message templates.
-// No backend, no AI — everything here is pure functions + localStorage.
+// No backend, no AI - everything here is pure functions + localStorage.
 
 export type Lang = "en" | "hi";
 export type AlertChannel = "whatsapp" | "sms";

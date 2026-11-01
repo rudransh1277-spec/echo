@@ -81,13 +81,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         name: "viewport",
         content: "width=device-width, initial-scale=1, viewport-fit=cover",
       },
-      { title: "ECHO — Emergency communication" },
+      { title: "ECHO - Emergency communication" },
       {
         name: "description",
         content:
           "One tap builds a structured emergency message with live location and sends it over WhatsApp. Does not replace emergency services.",
       },
-      { property: "og:title", content: "ECHO — Emergency communication" },
+      { property: "og:title", content: "ECHO - Emergency communication" },
       {
         property: "og:description",
         content:

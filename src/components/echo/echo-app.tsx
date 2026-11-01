@@ -125,7 +125,7 @@ export default function EchoApp() {
   const t = dict(lang);
   const speech = useSpeechInput(lang);
 
-  // Load persisted state (browser storage only in effects — SSR safe).
+  // Load persisted state (browser storage only in effects - SSR safe).
   useEffect(() => {
     registerEchoServiceWorker();
 

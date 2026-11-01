@@ -5,13 +5,13 @@ export const Route = createFileRoute("/")({
   component: Index,
   head: () => ({
     meta: [
-      { title: "ECHO — Emergency communication" },
+      { title: "ECHO - Emergency communication" },
       {
         name: "description",
         content:
           "One tap builds a structured emergency message with live location and sends it over WhatsApp to authorities and family. Does not replace emergency services.",
       },
-      { property: "og:title", content: "ECHO — Emergency communication" },
+      { property: "og:title", content: "ECHO - Emergency communication" },
       {
         property: "og:description",
         content:

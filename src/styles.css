@@ -5,7 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * ECHO design system — Vercel/Geist style: black-and-white precision.
+ * ECHO design system - Vercel/Geist style: black-and-white precision.
  * 1px borders, radius 8px, no gradients, no shadows.
  * Accent colors are small icon/dot colors only.
  */

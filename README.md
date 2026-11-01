@@ -1,4 +1,4 @@
-# ECHO — Emergency Communication
+# ECHO - Emergency Communication
 
 > Accessible, single-tap emergency communication designed to bridge the gap between people in distress, emergency helplines, and family contacts.
 
